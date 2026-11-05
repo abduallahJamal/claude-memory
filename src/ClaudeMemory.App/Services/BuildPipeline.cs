@@ -113,6 +113,11 @@ public sealed class BuildPipeline : IBuildPipeline
             _ => SummaryBuilder.Build(chosen, options, now),
         };
 
+        // Clip extremely large output so the UI stays responsive (PRD §9.29). The notice names
+        // the cap and says the source is complete, so nothing disappears silently; the headless
+        // host applies the same Core transform in CliRunner.
+        text = OutputClipper.ClipOutput(text, options.MaxOutputChars);
+
         if (options.AsciiOnly) text = AsciiFold.ToAscii(text);
 
         var prompts = 0;

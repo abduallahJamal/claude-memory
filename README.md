@@ -211,6 +211,7 @@ summary. Consequences worth knowing:
 | `--sidechains drop` | ignore subagent turns |
 | `--no-addresses` | skip bare hex/address harvesting |
 | `--history 0` | do not archive previous versions |
+| `--max-output-chars N` | cap on the generated document (default 4194304, `0` = unlimited); above it the output is clipped and a visible notice says how much was dropped |
 | `--ascii` | downgrade arrow/box glyphs for legacy consoles (letters of any script are kept) |
 | `--fast` | **approximate**: skip transcripts whose file mtime predates `--since` instead of reading every one. Opt-in, needs `--since`, and can miss sessions whose timestamps live inside the record while the file was moved or restored |
 | `--lang` | `auto` (default), `en`, `ar`, or `both` — section header language |

@@ -52,8 +52,8 @@ public sealed class CliHelpTests
         Assert.EndsWith(
             "ClaudeMemory.Cli: error: unrecognized arguments: --bogus\n", stderr, StringComparison.Ordinal);
 
-        // The reference emits 16 wrapped usage lines plus the error line.
-        Assert.Equal(17, stderr.Split('\n').Length - 1);
+        // The reference shape: 17 wrapped usage lines plus the error line.
+        Assert.Equal(18, stderr.Split('\n').Length - 1);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public sealed class CliHelpTests
         var specs = CliSpecs.Create(CliHarness.Now);
         var usageLines = CliHelp.Usage(specs, CliHarness.HelpWidth).Split('\n');
 
-        Assert.Equal(16, usageLines.Length);
+        Assert.Equal(17, usageLines.Length);
         Assert.All(usageLines.Skip(1), line => Assert.StartsWith("                        ", line, StringComparison.Ordinal));
     }
 

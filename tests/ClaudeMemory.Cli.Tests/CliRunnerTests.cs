@@ -406,6 +406,37 @@ public sealed class CliRunnerTests
         Assert.StartsWith(expected, stderr, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Max_output_chars_clips_the_document_and_says_so()
+    {
+        Assert.Equal(0, CliHarness.Run(
+            RootArgs("--print", "--quiet", "--max-output-chars", "500"), out var clipped, out _));
+
+        Assert.True(clipped.Length < 2000, $"expected a clipped document, got {clipped.Length} chars");
+        Assert.Contains("_Output clipped: ", clipped, StringComparison.Ordinal);
+        Assert.Contains("--max-output-chars (500)", clipped, StringComparison.Ordinal);
+        Assert.Contains("The source is complete", clipped, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Max_output_chars_zero_leaves_the_document_intact()
+    {
+        Assert.Equal(0, CliHarness.Run(RootArgs("--print", "--quiet"), out var plain, out _));
+        Assert.Equal(0, CliHarness.Run(
+            RootArgs("--print", "--quiet", "--max-output-chars", "0"), out var unlimited, out _));
+
+        Assert.Equal(plain, unlimited);
+        Assert.DoesNotContain("_Output clipped", unlimited, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_default_cap_leaves_the_fixture_document_alone()
+    {
+        Assert.Equal(0, CliHarness.Run(RootArgs("--print", "--quiet"), out var text, out _));
+
+        Assert.DoesNotContain("_Output clipped", text, StringComparison.Ordinal);
+    }
+
     private static int RuneCount(string text)
     {
         var count = 0;

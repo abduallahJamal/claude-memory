@@ -166,6 +166,11 @@ internal static class CliRunner
 
         var text = Render(chosen, options, host.Now);
 
+        // PRD §9.29: an extremely large document is clipped, with a visible notice, instead of
+        // being written (or printed) in full. Core keeps this a pure string transform so the
+        // window applies the same rule through BuildPipeline.
+        text = OutputClipper.ClipOutput(text, options.MaxOutputChars);
+
         if (options.MaxChars < Budget.Floor
             && options.Mode is "memory" or "full"
             && !options.Quiet)

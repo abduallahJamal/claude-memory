@@ -78,7 +78,7 @@ Secondary: the same user on another machine, using the published build without P
 
 ### CLI parity
 
-- **FR-25 Headless CLI:** `ClaudeMemory.Cli` supports the reference flags: `--root`, `--projects-dir`, `--out`, `--print`, `--mode`, `--format`, `--sessions`, `--since`, `--fast`, `--cwd`, `--here`, `--branch`, `--max-chars`, `--max-items`, `--max-paths`, `--max-cmds`, `--max-line`, `--max-prompts`, `--max-file-bytes`, `--sidechains`, `--include-thinking`, `--no-addresses`, `--history`, `--source-note`, `--share`, `--share-file`, `--share-save`, `--only-share`, `--ascii`, `--lang`, `--list`, `--quiet`, `--version`.
+- **FR-25 Headless CLI:** `ClaudeMemory.Cli` supports the reference flags: `--root`, `--projects-dir`, `--out`, `--print`, `--mode`, `--format`, `--sessions`, `--since`, `--fast`, `--cwd`, `--here`, `--branch`, `--max-chars`, `--max-items`, `--max-paths`, `--max-cmds`, `--max-line`, `--max-prompts`, `--max-file-bytes`, `--max-output-chars`, `--sidechains`, `--include-thinking`, `--no-addresses`, `--history`, `--source-note`, `--share`, `--share-file`, `--share-save`, `--only-share`, `--ascii`, `--lang`, `--list`, `--quiet`, `--version`.
 - **FR-26 Exit codes:** 0 success, 1 no sessions matched, 2 no transcript directory, 3 share import failure — matching the reference.
 
 ## 6. UX specification

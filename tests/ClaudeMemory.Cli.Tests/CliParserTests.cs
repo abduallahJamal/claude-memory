@@ -96,7 +96,7 @@ public sealed class CliParserTests
         var error = Assert.Throws<CliUsageException>(() => Parse("--max"));
         Assert.Equal(
             "ambiguous option: --max could match --max-chars, --max-items, --max-paths, "
-            + "--max-cmds, --max-line, --max-prompts, --max-file-bytes",
+            + "--max-cmds, --max-line, --max-prompts, --max-file-bytes, --max-output-chars",
             error.Message);
     }
 
