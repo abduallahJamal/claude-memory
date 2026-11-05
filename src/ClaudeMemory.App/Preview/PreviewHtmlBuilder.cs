@@ -1,3 +1,4 @@
+using ClaudeMemory.Core.Text;
 using Markdig;
 using Markdig.Extensions.EmphasisExtras;
 
@@ -44,11 +45,21 @@ public static class PreviewHtmlBuilder
         return Markdown.ToHtml(document, Pipeline);
     }
 
-    /// <summary>The complete page handed to <c>WebView2.NavigateToString</c>.</summary>
+    /// <summary>
+    /// The complete page handed to <c>WebView2.NavigateToString</c>. Above
+    /// <see cref="OutputClipper.DefaultPreviewChars"/> the Markdown is clipped first, with a
+    /// visible notice, so one pathological document cannot stall the WebView (PRD §9.29); the
+    /// source text the user can copy or save is untouched.
+    /// </summary>
     public static string BuildDocument(string markdown)
     {
-        var body = BuildBody(markdown);
+        markdown ??= string.Empty;
         var direction = DetectDirection(markdown);
+
+        // Clip the Markdown before Markdig runs: parsing a pathological document is what
+        // stalls the window, and a clipped HTML string would leave a half-written tag behind.
+        markdown = OutputClipper.ClipPreview(markdown, OutputClipper.DefaultPreviewChars);
+        var body = BuildBody(markdown);
         return DocumentHead
                + "\n<body dir=\"" + direction + "\">\n<div class=\"markdown-body\">\n"
                + body
