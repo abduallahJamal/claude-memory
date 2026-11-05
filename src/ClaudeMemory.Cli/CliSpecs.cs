@@ -238,6 +238,16 @@ internal static class CliSpecs
         },
         new()
         {
+            Names = ["--max-output-chars"],
+            Kind = OptionKind.Value,
+            Metavar = "MAX_OUTPUT_CHARS",
+            Help = "generated-output cap; overflow is clipped with a notice (0: unlimited, default: {default})",
+            DefaultText = OutputClipper.DefaultOutputChars.ToString(
+                System.Globalization.CultureInfo.InvariantCulture),
+            Assign = Integer((options, value) => options.MaxOutputChars = value),
+        },
+        new()
+        {
             Names = ["--sidechains"],
             Kind = OptionKind.Value,
             Choices = Sidechains,

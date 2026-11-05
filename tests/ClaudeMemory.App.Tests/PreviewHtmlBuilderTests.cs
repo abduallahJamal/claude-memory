@@ -176,4 +176,40 @@ public sealed class PreviewHtmlBuilderTests
 
         Assert.Contains("<body dir=\"ltr\">", document, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Preview_is_clipped_with_a_visible_notice_when_it_exceeds_the_cap()
+    {
+        // Markdown far above the 2 Mi character preview cap, with a marker only the tail has.
+        var big = new string('x', 2 * 1024 * 1024 + 4096) + "\n\nTAIL-MARKER\n";
+        var document = PreviewHtmlBuilder.BuildDocument(big);
+
+        Assert.Contains("Preview clipped", document, StringComparison.Ordinal);
+        Assert.Contains("The source is complete", document, StringComparison.Ordinal);
+        Assert.DoesNotContain("TAIL-MARKER", document, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Preview_under_the_cap_is_not_clipped()
+    {
+        var document = PreviewHtmlBuilder.BuildDocument("hello world");
+
+        Assert.DoesNotContain("Preview clipped", document, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_clipping_notice_is_plain_markdown_that_cannot_be_injected()
+    {
+        var document = PreviewHtmlBuilder.BuildDocument(new string('x', 2 * 1024 * 1024 + 1));
+
+        // The notice is Markdown emphasis, rendered by the same raw-HTML-disabled pipeline:
+        // the markup survives as <em>, and a document that tries to smuggle real tags in is
+        // still escaped.
+        Assert.Contains("<em>Preview clipped", document, StringComparison.Ordinal);
+        Assert.DoesNotContain("<p>Preview clipped", document, StringComparison.Ordinal);
+
+        var smuggled = PreviewHtmlBuilder.BuildBody("<p>Preview clipped</p>");
+        Assert.DoesNotContain("<p>Preview clipped", smuggled, StringComparison.Ordinal);
+        Assert.Contains("&lt;p&gt;Preview clipped", smuggled, StringComparison.Ordinal);
+    }
 }

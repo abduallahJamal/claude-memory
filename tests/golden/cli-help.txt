@@ -8,6 +8,7 @@ usage: ClaudeMemory.Cli [-h] [--version] [--root ROOT]
                         [--max-cmds MAX_CMDS] [--max-line MAX_LINE]
                         [--max-prompts MAX_PROMPTS_PER_SESSION]
                         [--max-file-bytes MAX_FILE_BYTES]
+                        [--max-output-chars MAX_OUTPUT_CHARS]
                         [--sidechains {keep,drop}] [--include-thinking]
                         [--no-addresses] [--history HISTORY]
                         [--source-note SOURCE_NOTE] [--share URL]
@@ -56,6 +57,9 @@ options:
   --max-file-bytes MAX_FILE_BYTES
                         per-transcript read cap; tail is kept (default:
                         12582912)
+  --max-output-chars MAX_OUTPUT_CHARS
+                        generated-output cap; overflow is clipped with a
+                        notice (0: unlimited, default: 4194304)
   --sidechains {keep,drop}
                         include subagent turns (default: keep)
   --include-thinking    include thinking blocks

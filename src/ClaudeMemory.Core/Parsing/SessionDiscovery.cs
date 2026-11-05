@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 namespace ClaudeMemory.Core.Parsing;
 
 /// <summary>
@@ -13,14 +17,15 @@ public static class SessionDiscovery
     {
         var baseDir = string.IsNullOrEmpty(projectsDir) ? System.IO.Path.Combine(root, "projects") : projectsDir;
 
-        var files = new List<string>();
+        var files = new List<(string Path, DateTime WriteUtc)>();
         if (Directory.Exists(baseDir))
         {
             foreach (var path in Directory.EnumerateFiles(baseDir, "*.jsonl", SearchOption.AllDirectories))
             {
                 try
                 {
-                    if (new FileInfo(path).Length > 0) files.Add(path);
+                    var info = new FileInfo(path);
+                    if (info.Length > 0) files.Add((path, info.LastWriteTimeUtc));
                 }
                 catch (IOException)
                 {
@@ -31,26 +36,12 @@ public static class SessionDiscovery
             }
         }
 
+        // Read each file's write time once; OrderBy would otherwise stat the file once per
+        // comparison, which matters when a project has thousands of transcripts.
         return files
-            .OrderBy(LastWriteUtc)
-            .ThenBy(System.IO.Path.GetFileName, StringComparer.Ordinal)
+            .OrderBy(f => f.WriteUtc)
+            .ThenBy(f => System.IO.Path.GetFileName(f.Path), StringComparer.Ordinal)
+            .Select(f => f.Path)
             .ToList();
-    }
-
-    /// <summary>Last write time, or <see cref="DateTime.MinValue"/> when it cannot be read.</summary>
-    private static DateTime LastWriteUtc(string path)
-    {
-        try
-        {
-            return File.GetLastWriteTimeUtc(path);
-        }
-        catch (IOException)
-        {
-            return DateTime.MinValue;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return DateTime.MinValue;
-        }
     }
 }

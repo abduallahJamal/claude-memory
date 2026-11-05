@@ -1,3 +1,5 @@
+using ClaudeMemory.Core.Text;
+
 namespace ClaudeMemory.Core.Model;
 
 /// <summary>Command/UI options (claude_memory.py:1760).</summary>
@@ -43,6 +45,10 @@ public sealed class MemoryOptions
     public int MaxPromptsPerSession { get; set; } = 12;
 
     public int MaxFileBytes { get; set; } = 12 * 1024 * 1024;
+
+    /// <summary>Cap on the generated text length. Above it the output is clipped with a visible
+    /// notice so the UI stays responsive (PRD §9.29). Zero means unlimited.</summary>
+    public int MaxOutputChars { get; set; } = OutputClipper.DefaultOutputChars;
 
     public string Sidechains { get; set; } = SidechainsKeep;
 
